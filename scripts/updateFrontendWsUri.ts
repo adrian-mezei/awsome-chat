@@ -24,6 +24,8 @@ const S3 = new AWS.S3();
 
             if (bucket && bucket.Name) {
                 await S3.upload({ Bucket: bucket.Name, Key: 'config.js', Body: data }).promise();
+
+                console.log(`http://${bucket.Name}.s3-website.${process.env.CDK_DEPLOY_REGION}.amazonaws.com/`);
             }
         }
     }
