@@ -16,7 +16,7 @@ const S3 = new AWS.S3();
         const apiStageResponse = await ApiGW.getStages({ ApiId: api.ApiId }).promise();
         if (apiStageResponse.Items) {
             const apiStage = apiStageResponse.Items[0];
-            const webSocketUri = `wss://${api.ApiId}.execute-api.eu-central-1.amazonaws.com/${apiStage.StageName}`;
+            const webSocketUri = `wss://${api.ApiId}.execute-api.${process.env.CDK_DEPLOY_REGION}.amazonaws.com/${apiStage.StageName}`;
             const data = `const webSocketUri = '${webSocketUri}';`;
 
             const buckets = await S3.listBuckets().promise();
