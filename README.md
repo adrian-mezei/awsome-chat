@@ -4,9 +4,12 @@ This repository contains an example chat application using AWS services.
 
 ## Deployment
 
-Create a local .env file based on the .env-sample.env and update it with your target deployment AWS account details and the AWS CLI profile name to use the proper credentials. Make sure that the used AWS account in bootstrapped by cdk (you can do this by `npm run cdk-bootstrap`). Then you can simply deploy with the following command:
+Create a local .env file based on the .env-sample.env and update it with your target deployment AWS account details and the AWS CLI profile name to use the proper credentials. Make sure that the used AWS account in bootstrapped by cdk (you can do this by `npm run cdk-bootstrap`). Then you can simply deploy with the following two commands:
 
 ```bash
+# install dependencies to all application elements
+npm run install:all
+
 # rebuild and deploy this stack and all of its application elements to your configured (or default) AWS account/region
 $ npm run cdk-deploy
 ```
@@ -16,6 +19,9 @@ $ npm run cdk-deploy
 ```bash
 # install dependencies
 $ npm install
+
+# install dependencies to all application elements
+$ npm install:all
 
 # compile ts files to js files
 $ npm run build
