@@ -17,7 +17,7 @@
         "cdk-destroy": "npm run build:all && dotenv cdk destroy --require-approval never --profile $AWS_PROFILE '*'",
         "cdk-diff": "npm run build:all && dotenv cdk diff --require-approval never --profile $AWS_PROFILE '*'",
         "cdk-synth": "npm run build:all && dotenv cdk synth --require-approval never --profile $AWS_PROFILE '*'",
-        "cdk-bootstrap": "dotenv cdk bootstrap --profile $AWS_PROFILE",
+        "cdk-bootstrap": "npm run build:all && dotenv cdk bootstrap --profile $AWS_PROFILE",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "spell": "cspell \"**/*\"",
