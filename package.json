@@ -12,7 +12,7 @@
         "test:snapshot": "jest",
         "test:snapshot:update": "jest -u",
         "cdk": "cdk",
-        "cdk-deploy": "npm run build:all && dotenv cdk deploy --require-approval never --profile $AWS_PROFILE '*' && npm run update-frontend-webs-socket-uri",
+        "cdk-deploy": "npm run build:all && dotenv cdk deploy --require-approval never --profile $AWS_PROFILE '*' && npm run update-frontend-web-socket-uri",
         "cdk-destroy": "npm run build:all && dotenv cdk destroy --require-approval never --profile $AWS_PROFILE '*'",
         "cdk-diff": "npm run build:all && dotenv cdk diff --require-approval never --profile $AWS_PROFILE '*'",
         "cdk-synth": "npm run build:all && dotenv cdk synth --require-approval never --profile $AWS_PROFILE '*'",
@@ -20,7 +20,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "spell": "cspell \"**/*\"",
-        "update-frontend-webs-socket-uri": "env AWS_SDK_LOAD_CONFIG='true' ts-node scripts/updateFrontendWsUri.ts"
+        "update-frontend-web-socket-uri": "env AWS_SDK_LOAD_CONFIG='true' ts-node scripts/updateFrontendWsUri.ts"
     },
     "devDependencies": {
         "@aws-cdk/assert": "1.94.1",
