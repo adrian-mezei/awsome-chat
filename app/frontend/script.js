@@ -40,22 +40,22 @@ function manualConnectDisconnect() {
 
 async function initWebSocket() {
     websocket = new WebSocket(webSocketUri);
-    websocket.onopen = function (evt) {
+    websocket.onopen = evt => {
         onOpen(evt);
     };
-    websocket.onclose = function (evt) {
+    websocket.onclose = evt => {
         onClose(evt);
     };
-    websocket.onmessage = function (evt) {
+    websocket.onmessage = evt => {
         onMessage(evt);
     };
-    websocket.onerror = function (evt) {
+    websocket.onerror = evt => {
         onError(evt);
     };
 }
 
 function btnSend() {
-    var messageField = document.getElementById('message');
+    const messageField = document.getElementById('message');
 
     doSend(messageField.value);
     messageField.value = '';
@@ -186,7 +186,7 @@ function getRightImage(name) {
 
 function tryParseJSON(jsonString) {
     try {
-        var o = JSON.parse(jsonString);
+        const o = JSON.parse(jsonString);
         if (o && typeof o === 'object') {
             return o;
         }
