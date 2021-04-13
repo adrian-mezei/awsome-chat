@@ -30,6 +30,14 @@ document.getElementById('gravatar').addEventListener('keyup', e => {
     }, 1000);
 });
 
+function manualConnectDisconnect() {
+    if (websocket.readyState === websocket.OPEN) {
+        websocket.close();
+    } else if (websocket.readyState === websocket.CLOSED) {
+        initWebSocket();
+    }
+}
+
 async function initWebSocket() {
     websocket = new WebSocket(webSocketUri);
     websocket.onopen = function (evt) {
