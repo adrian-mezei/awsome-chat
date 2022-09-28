@@ -24,12 +24,12 @@
         "update-frontend-web-socket-uri": "env AWS_SDK_LOAD_CONFIG='true' ts-node scripts/updateFrontendWsUri.ts"
     },
     "devDependencies": {
-        "@aws-cdk/assert": "1.94.1",
+        "@aws-cdk/assert": "1.174.0",
         "@types/fs-extra": "^9.0.8",
         "@types/jest": "^26.0.10",
         "@types/node": "^14.14.35",
         "@types/source-map-support": "^0.5.3",
-        "aws-cdk": "1.94.1",
+        "aws-cdk": "1.174.0",
         "aws-sdk": "^2.868.0",
         "cspell": "^5.3.9",
         "dotenv-cli": "^4.0.0",
@@ -40,14 +40,15 @@
         "typescript": "~3.9.7"
     },
     "dependencies": {
-        "@aws-cdk/aws-apigatewayv2": "^1.94.1",
-        "@aws-cdk/aws-dynamodb": "^1.94.1",
-        "@aws-cdk/aws-iam": "^1.94.1",
-        "@aws-cdk/aws-lambda": "^1.94.1",
-        "@aws-cdk/aws-logs": "^1.94.1",
-        "@aws-cdk/aws-s3": "^1.94.1",
-        "@aws-cdk/aws-s3-deployment": "^1.94.1",
-        "@aws-cdk/core": "1.94.1",
+        "@aws-cdk/aws-apigatewayv2": "^1.174.0",
+        "@aws-cdk/aws-apigatewayv2-integrations": "^1.174.0",
+        "@aws-cdk/aws-dynamodb": "^1.174.0",
+        "@aws-cdk/aws-iam": "^1.174.0",
+        "@aws-cdk/aws-lambda": "^1.174.0",
+        "@aws-cdk/aws-logs": "^1.174.0",
+        "@aws-cdk/aws-s3": "^1.174.0",
+        "@aws-cdk/aws-s3-deployment": "^1.174.0",
+        "@aws-cdk/core": "1.174.0",
         "fs-extra": "^9.1.0",
         "source-map-support": "^0.5.16"
     }

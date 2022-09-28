@@ -2,13 +2,12 @@ import * as Lambda from '@aws-cdk/aws-lambda';
 import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
 import * as ApiGW from '@aws-cdk/aws-apigatewayv2';
+import * as ApiGWI from '@aws-cdk/aws-apigatewayv2-integrations';
 import * as Iam from '@aws-cdk/aws-iam';
 import * as S3 from '@aws-cdk/aws-s3';
 import * as S3Deployment from '@aws-cdk/aws-s3-deployment';
 import * as Logs from '@aws-cdk/aws-logs';
-import * as fs from 'fs-extra';
 import * as DDB from '@aws-cdk/aws-dynamodb';
-import { RemovalPolicy } from '@aws-cdk/core';
 
 export class AwesomeChatStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -17,7 +16,7 @@ export class AwesomeChatStack extends cdk.Stack {
         const lambdaFunction = this.createLambdaFunction();
         const { webSocketApi, webSocketApiStage } = this.createApiGateway(lambdaFunction);
 
-        const s3Bucket = this.createS3Bucket(webSocketApi, webSocketApiStage);
+        const s3Bucket = this.createS3Bucket();
 
         const dynamoDBTable = this.createDynamoDBTable();
 
@@ -26,7 +25,7 @@ export class AwesomeChatStack extends cdk.Stack {
 
     createLambdaFunction(): Lambda.Function {
         const lambdaFunction = new Lambda.Function(this, 'WebSocketHandler', {
-            runtime: Lambda.Runtime.NODEJS_12_X,
+            runtime: Lambda.Runtime.NODEJS_16_X,
             handler: 'index.handler',
             code: Lambda.Code.fromAsset(path.join(__dirname, './../app/backend/bundle')),
             logRetention: Logs.RetentionDays.THREE_DAYS,
@@ -65,21 +64,21 @@ export class AwesomeChatStack extends cdk.Stack {
                 resources: [`arn:aws:dynamodb:${this.region}:${this.account}:table/${dynamoDBTable.tableName}`],
             }),
         );
-
-        dynamoDBTable.grantReadWriteData(lambdaFunction);
     }
 
     createApiGateway(
         lambdaFunction: Lambda.Function,
     ): { webSocketApi: ApiGW.WebSocketApi; webSocketApiStage: ApiGW.WebSocketStage } {
-        const bind: () => ApiGW.WebSocketRouteIntegrationConfig = () => ({
-            type: ApiGW.WebSocketIntegrationType.AWS_PROXY,
-            uri: `arn:aws:apigateway:${this.region}:lambda:path/2015-03-31/functions/${lambdaFunction.functionArn}/invocations`,
-        });
         const webSocketApi = new ApiGW.WebSocketApi(this, 'web-socket-api', {
-            connectRouteOptions: { integration: { bind } },
-            disconnectRouteOptions: { integration: { bind } },
-            defaultRouteOptions: { integration: { bind } },
+            connectRouteOptions: {
+                integration: new ApiGWI.WebSocketLambdaIntegration('web-socket-api-connect', lambdaFunction),
+            },
+            disconnectRouteOptions: {
+                integration: new ApiGWI.WebSocketLambdaIntegration('web-socket-api-disconnect', lambdaFunction),
+            },
+            defaultRouteOptions: {
+                integration: new ApiGWI.WebSocketLambdaIntegration('web-socket-api-default', lambdaFunction),
+            },
         });
 
         const webSocketApiStage = new ApiGW.WebSocketStage(this, 'web-socket-api-stage', {
@@ -91,14 +90,14 @@ export class AwesomeChatStack extends cdk.Stack {
         return { webSocketApi, webSocketApiStage };
     }
 
-    createS3Bucket(webSocketApi: ApiGW.WebSocketApi, webSocketApiStage: ApiGW.WebSocketStage): S3.Bucket {
+    createS3Bucket(): S3.Bucket {
         const bucket = new S3.Bucket(this, 's3-static-website-bucket', {
             publicReadAccess: true,
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             websiteIndexDocument: 'index.html',
         });
 
-        const deployment = new S3Deployment.BucketDeployment(this, 's3-static-website-deployment', {
+        new S3Deployment.BucketDeployment(this, 's3-static-website-deployment', {
             sources: [S3Deployment.Source.asset(path.join(__dirname, './../app/frontend'))],
             destinationBucket: bucket,
         });
@@ -110,7 +109,7 @@ export class AwesomeChatStack extends cdk.Stack {
         return new DDB.Table(this, 'dynamodb-table', {
             partitionKey: { name: 'connectionId', type: DDB.AttributeType.STRING },
             billingMode: DDB.BillingMode.PAY_PER_REQUEST,
-            removalPolicy: RemovalPolicy.DESTROY,
+            removalPolicy: cdk.RemovalPolicy.DESTROY,
             tableName: 'chat-app-table',
         });
     }
