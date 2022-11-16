@@ -2,14 +2,29 @@
 
 This repository contains an example chat application using AWS services.
 
-## Deployment
+## Install
 
-Create a local .env file based on the .env-sample.env and update it with your target deployment AWS account details and the AWS CLI profile name to use the proper credentials. Make sure that the used AWS account in bootstrapped by cdk (you can do this by `npm run cdk-bootstrap`). Then you can simply deploy with the following two commands:
+Create a local .env file based on the .env-sample.env and update it with your target deployment AWS account details and the AWS CLI profile name to use the proper credentials. Then install the project dependencies by the following command:
 
 ```bash
 # install dependencies to all application elements
-npm run install:all
+$ npm run install:all
+```
 
+## Terraform deployment
+
+Execute the following two commands:
+
+```bash
+# rebuild and deploy these terraform resources and all of its application elements to your configured (or default) AWS account/region
+$ npm run tf-apply
+```
+
+## AWS CDK deployment
+
+Make sure that the used AWS account in bootstrapped by cdk (you can do this by `npm run cdk-bootstrap`). You only need to bootstrap an AWS account only once. Then you can simply deploy with the following two commands:
+
+```bash
 # rebuild and deploy this stack and all of its application elements to your configured (or default) AWS account/region
 $ npm run cdk-deploy
 ```
@@ -53,6 +68,19 @@ $ npm run format
 $ npm run spell
 ```
 
+## Useful terraform commands
+
+```bash
+# rebuild and deploy these terraform resources and all of its application elements to your configured (or default) AWS account/region
+$ npm run tf-apply
+
+# rebuild and show the terraform plan
+$ npm run tf-plan
+
+# rebuild and destroy the terraform resources
+$ npm run tf-destroy
+```
+
 ## Useful cdk commands
 
 ```bash
@@ -64,6 +92,9 @@ $ npm run cdk-diff
 
 # rebuild and emit the synthesized CloudFormation template
 $ npm run cdk-synth
+
+# rebuild and destroy the CloudFormation stack
+$ npm run cdk-destroy
 
 # bootstrap your AWS account if required and you have not done it before
 $ npm run cdk-bootstrap
