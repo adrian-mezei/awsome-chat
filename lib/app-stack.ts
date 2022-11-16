@@ -94,6 +94,7 @@ export class AwesomeChatStack extends cdk.Stack {
         const bucket = new S3.Bucket(this, 's3-static-website-bucket', {
             publicReadAccess: true,
             removalPolicy: cdk.RemovalPolicy.DESTROY,
+            autoDeleteObjects: true,
             websiteIndexDocument: 'index.html',
         });
 
