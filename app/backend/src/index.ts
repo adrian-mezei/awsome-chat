@@ -77,7 +77,7 @@ async function handleDefault(
                 try {
                     await apiGW.postToConnection({ ConnectionId: connectionId, Data: data }).promise();
                 } catch (e) {
-                    if (e.statusCode === 410) {
+                    if ((e as any).statusCode === 410) {
                         console.log(`Found stale connection, deleting ${connectionId}`);
                         await ddb
                             .delete({ TableName: process.env.TABLE_NAME!, Key: { connectionIdDB: connectionId } })
@@ -92,7 +92,7 @@ async function handleDefault(
         try {
             await Promise.all(postCalls);
         } catch (e) {
-            return { statusCode: 500, body: e.stack };
+            return { statusCode: 500, body: (e as any).stack };
         }
     }
 
