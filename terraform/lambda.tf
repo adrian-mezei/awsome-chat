@@ -20,7 +20,6 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = {
-      user           = "AWS User Group Budapest"
       APIGW_ENDPOINT = "https://${aws_apigatewayv2_api.this.id}.execute-api.${local.region}.amazonaws.com/prod"
       TABLE_NAME     = local.dynamodb_table_name
     }
@@ -30,4 +29,11 @@ resource "aws_lambda_function" "this" {
     aws_cloudwatch_log_group.this,
     aws_iam_role_policy_attachment.this
   ]
+}
+
+resource "aws_lambda_permission" "this" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.this.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_apigatewayv2_api.this.execution_arn}/*/*"
 }

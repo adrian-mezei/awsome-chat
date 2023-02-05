@@ -25,19 +25,11 @@ resource "aws_apigatewayv2_route" "disconnect" {
   target = "integrations/${aws_apigatewayv2_integration.this.id}"
 }
 
-resource "aws_lambda_permission" "this" {
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.this.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn = "${aws_apigatewayv2_api.this.execution_arn}/*/*"
-}
-
 resource "aws_apigatewayv2_route" "default" {
   api_id    = aws_apigatewayv2_api.this.id
   route_key = "$default"
   target = "integrations/${aws_apigatewayv2_integration.this.id}"
 }
-
 
 resource "aws_apigatewayv2_stage" "this" {
   api_id = aws_apigatewayv2_api.this.id
