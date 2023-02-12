@@ -1,9 +1,5 @@
-locals {
-  dynamodb_table_name = "AWSomeChat"
-}
-
 resource "aws_dynamodb_table" "this" {
-  name = local.dynamodb_table_name
+  name     = local.dynamodb_table_name
   hash_key = "connectionId"
 
   attribute {

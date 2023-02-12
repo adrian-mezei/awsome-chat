@@ -1,11 +1,6 @@
-locals {
-  lambda_function_name       = "AWSomeChat"
-  lambda_function_invoke_arn = "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:${local.account_id}:function:${local.lambda_function_name}/invocations"
-}
-
 data "archive_file" "this" {
   type        = "zip"
-  source_dir  = "${path.module}/../app/backend/bundle"
+  source_dir  = "${path.module}/../backend/bundle"
   output_path = "${path.module}/lambda.zip"
 }
 
@@ -20,20 +15,17 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = {
-      APIGW_ENDPOINT = "https://${aws_apigatewayv2_api.this.id}.execute-api.${local.region}.amazonaws.com/prod"
+      APIGW_ENDPOINT = "https://${aws_apigatewayv2_api.this.id}.execute-api.${local.region}.amazonaws.com/${local.api_gateway_stage_name}"
       TABLE_NAME     = local.dynamodb_table_name
     }
   }
 
-  depends_on = [
-    aws_cloudwatch_log_group.this,
-    aws_iam_role_policy_attachment.this
-  ]
+  depends_on = [aws_cloudwatch_log_group.this, aws_iam_role_policy_attachment.this]
 }
 
 resource "aws_lambda_permission" "this" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.this.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn = "${aws_apigatewayv2_api.this.execution_arn}/*/*"
+  source_arn    = "${aws_apigatewayv2_api.this.execution_arn}/*/*"
 }
