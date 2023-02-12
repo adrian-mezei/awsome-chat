@@ -4,6 +4,12 @@
 
 This repository contains an example chat application using AWS services with the infrastructure implemented in Terraform.
 
+<p align="center">
+  <kbd>
+    <img width=400 src="awsome-chat.png" />
+  </kbd>
+</p>
+
 ## Install and compile
 
 Install dependencies to the backend, frontend and terraform. Compile and bundle frontend and backend application components.
@@ -22,6 +28,12 @@ $ cd terraform
 $ terraform plan
 $ terraform apply
 ```
+
+<p align="center">
+  <kbd>
+    <img width=600 src="architecture.png" />
+  </kbd>
+</p>
 
 ## Clean up terraform deployment
 
