@@ -11,28 +11,12 @@ resource "aws_apigatewayv2_integration" "this" {
   integration_uri    = local.lambda_function_invoke_arn
 }
 
-resource "aws_apigatewayv2_route" "connect" {
-  api_id    = aws_apigatewayv2_api.this.id
-  route_key = "$connect"
-  target    = "integrations/${aws_apigatewayv2_integration.this.id}"
-}
+resource "aws_apigatewayv2_route" "this" {
+  for_each = toset(["$connect", "$disconnect", "$default"])
 
-resource "aws_apigatewayv2_route" "disconnect" {
   api_id    = aws_apigatewayv2_api.this.id
-  route_key = "$disconnect"
+  route_key = each.key
   target    = "integrations/${aws_apigatewayv2_integration.this.id}"
-}
-
-resource "aws_apigatewayv2_route" "default" {
-  api_id    = aws_apigatewayv2_api.this.id
-  route_key = "$default"
-  target    = "integrations/${aws_apigatewayv2_integration.this.id}"
-}
-
-resource "aws_apigatewayv2_stage" "this" {
-  api_id        = aws_apigatewayv2_api.this.id
-  name          = local.api_gateway_stage_name
-  deployment_id = aws_apigatewayv2_deployment.this.id
 }
 
 resource "aws_apigatewayv2_deployment" "this" {
@@ -45,9 +29,13 @@ resource "aws_apigatewayv2_deployment" "this" {
   triggers = {
     redeployment = sha256(jsonencode([
       aws_apigatewayv2_integration.this,
-      aws_apigatewayv2_route.connect,
-      aws_apigatewayv2_route.disconnect,
-      aws_apigatewayv2_route.default,
+      aws_apigatewayv2_route.this,
     ]))
   }
+}
+
+resource "aws_apigatewayv2_stage" "this" {
+  api_id        = aws_apigatewayv2_api.this.id
+  name          = local.api_gateway_stage_name
+  deployment_id = aws_apigatewayv2_deployment.this.id
 }
